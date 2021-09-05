@@ -1,3 +1,3 @@
-module github.com/WathiqProject/cdc-formatter
+module github.com/ahamedmulaffer/cdc-formatter
 
 go 1.15

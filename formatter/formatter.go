@@ -2,11 +2,11 @@ package formatter
 
 import(
 	"encoding/json"
-	"github.com/WathiqProject/cdc-formatter/mysqlFormatter"
+	"github.com/ahamedmulaffer/cdc-formatter/mysqlFormatter"
 	"reflect"
 	"fmt"
 	"errors"
-	"github.com/WathiqProject/cdc-formatter/mongoFormatter"
+	"github.com/ahamedmulaffer/cdc-formatter/mongoFormatter"
 )
 
 var funcMapper = map[string]interface{}{
