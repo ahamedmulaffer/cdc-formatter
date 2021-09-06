@@ -4,6 +4,7 @@ import(
 	"time"
 	"strings"
 	"reflect"
+	// "fmt"
 )
 
 func (after AfterType) timeFieldConversion(tableName string, operation string, field string, finalPayload map[string]interface{}) {
@@ -49,35 +50,35 @@ func canDoTimeConversion(tableName string, operation string, field string, dataM
 
 func (after AfterType) TIME(layout string, field string, finalPayload map[string]interface{}){
 	ms := finalPayload[field].(float64)/1000
-	t := time.Unix(0, int64(ms)*int64(time.Millisecond))
+	t := time.Unix(0, int64(ms)*int64(time.Millisecond)).UTC()
 	finalPayload[field] = t.Format(layout)
 }
 
 func (before BeforeType) TIME(layout string, field string, finalPayload map[string]interface{}){
 	ms := finalPayload[field].(float64)/1000
-	t := time.Unix(0, int64(ms)*int64(time.Millisecond))
+	t := time.Unix(0, int64(ms)*int64(time.Millisecond)).UTC()
 	finalPayload[field] = t.Format(layout)
 }
 
 func (after AfterType) DATE(layout string, field string, finalPayload map[string]interface{}){
 	t := time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
-	t = t.AddDate(0, 0, finalPayload[field].(int))
+	t = t.AddDate(0, 0, int(finalPayload[field].(float64)))
 	finalPayload[field] = t.Format(layout)
 }
 
 func (before BeforeType) DATE(layout string, field string, finalPayload map[string]interface{}){
 	t := time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
-	t = t.AddDate(0, 0, finalPayload["before_"+field].(int))
+	t = t.AddDate(0, 0, int(finalPayload[field].(float64)))
 	finalPayload[field] = t.Format(layout)
 }
 
 func (after AfterType) DATETIME(layout string, field string, finalPayload map[string]interface{}){
-	t := time.Unix(0, int64(finalPayload["before_"+field].(float64))*int64(time.Millisecond))
+	t := time.Unix(0, int64(finalPayload[field].(float64))*int64(time.Millisecond)).UTC()
 	finalPayload[field] = t.Format(layout)
 }
 
 func (before BeforeType) DATETIME(layout string, field string, finalPayload map[string]interface{}){
-	t := time.Unix(0, int64(finalPayload[field].(float64))*int64(time.Millisecond))
+	t := time.Unix(0, int64(finalPayload[field].(float64))*int64(time.Millisecond)).UTC()
 	finalPayload[field] = t.Format(layout)
 }
 

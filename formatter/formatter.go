@@ -35,7 +35,7 @@ func Process(message string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	return res, err
+	return res[0].Interface().(map[string]map[string]interface{}), err
 	//this res will have actual error
 	// you can get it like res[0].Interface()
 }

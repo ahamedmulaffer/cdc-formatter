@@ -13,17 +13,25 @@ var allowedOperations = map[string]string{
 }
 
 func Process(payload map[string]interface{}, source map[string]interface{}) map[string]map[string]interface{}{
-	var afterType AfterType
-	var beforeType BeforeType
-	collectionName := getCollectionName(source)
-	operation := allowedOperations[payload["op"].(string)]
 	finalPayload := make(map[string]map[string]interface{})
+	collectionName := "N/A"
+	operation := "N/A"
 	finalPayload["before"] = make(map[string]interface{})
 	finalPayload["after"] = make(map[string]interface{})
 	finalPayload["source"] = map[string]interface{} {
 		"collection": collectionName,
 		"operation": operation,
 	}
+	if _, ok := payload["op"]; !ok {
+		return finalPayload
+	}
+	var afterType AfterType
+	var beforeType BeforeType
+	collectionName = getCollectionName(source)
+	operation = allowedOperations[payload["op"].(string)]
+	finalPayload["source"]["collection"] = collectionName
+	finalPayload["source"]["operation"] = operation
+	
 	//check collection and its operation registered
 	if _, ok := configMap[collectionName]; !ok {
 		fmt.Println(finalPayload)
@@ -58,7 +66,7 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 			beforeType.loopRequiredFields(collectionName,operation,requiredB4Fields,payloadBefore,finalPayload["before"])
 		}
 	}
-	fmt.Println("finalPayload", finalPayload)
+	// fmt.Println("finalPayload", finalPayload)
 	return finalPayload
 }
 

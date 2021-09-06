@@ -12,17 +12,24 @@ var allowedOperations = map[string]string{
 }
 
 func Process(payload map[string]interface{}, source map[string]interface{}) map[string]map[string]interface{}{
-	var afterType AfterType
-	var beforeType BeforeType
-	tableName := getTableName(source)
-	operation := allowedOperations[payload["op"].(string)]
 	finalPayload := make(map[string]map[string]interface{})
+	tableName := "N/A"
+	operation := "N/A"
 	finalPayload["before"] = make(map[string]interface{})
 	finalPayload["after"] = make(map[string]interface{})
 	finalPayload["source"] = map[string]interface{} {
 		"table": tableName,
 		"operation": operation,
 	}
+	if _, ok := payload["op"]; !ok {
+		return finalPayload
+	}
+	var afterType AfterType
+	var beforeType BeforeType
+	tableName = getTableName(source)
+	operation = allowedOperations[payload["op"].(string)]
+	finalPayload["source"]["table"] = tableName
+	finalPayload["source"]["operation"] = operation
 	//check table and its operation registered
 	if _, ok := configMap[tableName]; !ok {
 		fmt.Println(finalPayload)
@@ -52,7 +59,7 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 			beforeType.loopPayloadFields(tableName,operation,payload["before"].(map[string]interface{}),finalPayload["before"])
 		}
 	}
-	fmt.Println("finalPayload", finalPayload)
+	// fmt.Println("finalPayload", finalPayload)
 	return finalPayload
 }
 
