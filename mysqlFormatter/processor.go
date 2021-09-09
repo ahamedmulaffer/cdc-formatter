@@ -2,7 +2,7 @@ package mysqlFormatter
 
 import(
 	// "strings"
-	"fmt"
+	// "fmt"
 )
 
 var allowedOperations = map[string]string{
@@ -18,8 +18,10 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 	finalPayload["before"] = make(map[string]interface{})
 	finalPayload["after"] = make(map[string]interface{})
 	finalPayload["source"] = map[string]interface{} {
+		"database": "mysql",
 		"table": tableName,
 		"operation": operation,
+		"allowed": false,
 	}
 	if _, ok := payload["op"]; !ok {
 		return finalPayload
@@ -32,13 +34,12 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 	finalPayload["source"]["operation"] = operation
 	//check table and its operation registered
 	if _, ok := configMap[tableName]; !ok {
-		fmt.Println(finalPayload)
 		return finalPayload
 	}
 	if _, ok := configMap[tableName][operation]; !ok {
-		fmt.Println(finalPayload)
 		return finalPayload
 	}
+	finalPayload["source"]["allowed"] = true
 	requiredAfterFields , requiredAfterFieldsAvailable := afterType.isRequiredFieldsAvailable(tableName, operation)
 	requiredB4Fields , requiredB4FieldsAvailable := beforeType.isRequiredFieldsAvailable(tableName, operation)
 	if payload["after"] != nil {

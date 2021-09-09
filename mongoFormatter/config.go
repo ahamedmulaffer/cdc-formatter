@@ -150,8 +150,8 @@ func isRegexExist(collectionName string, dataMap map[string]map[string]interface
 			if !ok {
 				return errors.New("object regex key value must be string")
 			}
-			if val != "startsWith" &&  val != "endsWith" && val != "contains" {
-				return errors.New("object regex key's value must be startsWith|endsWith|contains")
+			if val != "startsWith" &&  val != "endsWith" && val != "contains" && val != "equals" {
+				return errors.New("object regex key's value must be startsWith|endsWith|contains|equals")
 			}
 			if _, ok := collectionRegex[collectionName]; !ok {
 				collectionRegex[collectionName] = make(map[string]string)

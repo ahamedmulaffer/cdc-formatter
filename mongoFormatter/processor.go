@@ -2,7 +2,7 @@ package mongoFormatter
 
 import(
 	// "strings"
-	"fmt"
+	// "fmt"
 	"encoding/json"
 )
 
@@ -19,8 +19,10 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 	finalPayload["before"] = make(map[string]interface{})
 	finalPayload["after"] = make(map[string]interface{})
 	finalPayload["source"] = map[string]interface{} {
+		"database": "mongo",
 		"collection": collectionName,
 		"operation": operation,
+		"allowed": false,
 	}
 	if _, ok := payload["op"]; !ok {
 		return finalPayload
@@ -34,13 +36,12 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 	
 	//check collection and its operation registered
 	if _, ok := configMap[collectionName]; !ok {
-		fmt.Println(finalPayload)
 		return finalPayload
 	}
 	if _, ok := configMap[collectionName][operation]; !ok {
-		fmt.Println(finalPayload)
 		return finalPayload
 	}
+	finalPayload["source"]["allowed"] = true
 	requiredAfterFields , requiredAfterFieldsAvailable := afterType.isRequiredFieldsAvailable(collectionName, operation)
 	requiredB4Fields , requiredB4FieldsAvailable := beforeType.isRequiredFieldsAvailable(collectionName, operation)
 	if payload["after"] != nil {

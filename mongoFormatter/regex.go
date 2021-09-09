@@ -11,6 +11,7 @@ var funcMapper = map[string]interface{}{
 	"startsWith": startsWith,
 	"endsWith": endsWith,
 	"contains": contains,
+	"equals": equals,
 }
 
 func startsWith(val string, regex string) bool{
@@ -23,6 +24,10 @@ func endsWith(val string, regex string) bool{
 
 func contains(val string, regex string) bool{
 	return strings.Contains(val, regex)
+}
+
+func equals(val string, regex string) bool{
+	return val == regex
 }
 
 func call(funcName string, params ... interface{}) (res []reflect.Value, err error) {
