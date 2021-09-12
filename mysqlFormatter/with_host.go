@@ -2,7 +2,7 @@ package mysqlFormatter
 
 import(
 	"encoding/json"
-	// "fmt"
+	"strings"
 )
 
 
@@ -63,17 +63,31 @@ func addUnderscoreToNormalFields(finalPayload map[string]interface{}, field stri
 func addUnderscoreToAssetFields(finalPayload map[string]interface{}, field string, HostID string){
 	val, ok := canBeAssertToString(finalPayload[field])
 	if ok {
-		var sliceAssets []map[string]interface{}
-		//check it is an array
-		err := json.Unmarshal([]byte(val), &sliceAssets)
+		var sliceAssetsMap []map[string]interface{}
+		var sliceAssets []string
+		err := json.Unmarshal([]byte(val), &sliceAssetsMap)
 		if err != nil && val != ""{
-			finalPayload[field] = HostID+"_"+val
+			err := json.Unmarshal([]byte(val), &sliceAssets)
+			if err != nil && val != ""{
+				finalPayload[field] = HostID+"_"+val
+				return
+			}
+			if len(sliceAssets) == 0 {
+				return
+			}
+			for k,asset := range sliceAssets {
+				if strings.TrimSpace(asset) == "" {
+					continue
+				}
+				sliceAssets[k] = HostID+"_"+asset
+			}
+			finalPayload[field] = sliceAssets
 			return
 		}
-		if len(sliceAssets) == 0 {
+		if len(sliceAssetsMap) == 0 {
 			return
 		}
-		for _,asset := range sliceAssets {
+		for _,asset := range sliceAssetsMap {
 			if _, ok := asset["file_name"]; !ok {
 				continue
 			}
@@ -83,6 +97,6 @@ func addUnderscoreToAssetFields(finalPayload map[string]interface{}, field strin
 			}
 			asset["file_name"] = HostID+"_"+fileName
 		}
-		finalPayload[field] = sliceAssets
+		finalPayload[field] = sliceAssetsMap
 	}
 }
