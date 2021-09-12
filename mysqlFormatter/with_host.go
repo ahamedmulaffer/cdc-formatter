@@ -81,7 +81,8 @@ func addUnderscoreToAssetFields(finalPayload map[string]interface{}, field strin
 				}
 				sliceAssets[k] = HostID+"_"+asset
 			}
-			finalPayload[field] = sliceAssets
+			slice, _ := json.Marshal(sliceAssets)
+			finalPayload[field] = slice
 			return
 		}
 		if len(sliceAssetsMap) == 0 {
