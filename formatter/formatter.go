@@ -4,7 +4,7 @@ import(
 	"encoding/json"
 	"github.com/ahamedmulaffer/cdc-formatter/mysqlFormatter"
 	"reflect"
-	"fmt"
+	// "fmt"
 	"errors"
 	"github.com/ahamedmulaffer/cdc-formatter/mongoFormatter"
 )
