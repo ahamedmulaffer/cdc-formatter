@@ -83,7 +83,6 @@ func getCollectionName(source map[string]interface{}) string{
 			if res[0].Interface().(bool) {
 				return collectionName
 			}
-			return collName
 		}
 	}
 	return collName
