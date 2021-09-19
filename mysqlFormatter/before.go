@@ -10,7 +10,7 @@ func (before BeforeType) loopRequiredFields(tableName string, operation string, 
 			continue
 		}
 		//check if map to id enbled
-		if sliceField(requiredB4Fields).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) {
+		if sliceField(requiredB4Fields).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) && reqField == "ID"{
 			idToHPIDFuncCalled = true
 			if _, ok := payloadBefore["ID"]; ok {
 				finalPayload["HPID"] = payloadBefore["ID"]
@@ -65,7 +65,7 @@ func (before BeforeType) loopPayloadFields(tableName string, operation string, p
 			continue
 		}
 		//check if map to id enbled
-		if mapField(payloadBefore).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) {
+		if mapField(payloadBefore).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) && field == "ID"{
 			idToHPIDFuncCalled = true
 			if _, ok := payloadBefore["ID"]; ok {
 				finalPayload["HPID"] = payloadBefore["ID"]

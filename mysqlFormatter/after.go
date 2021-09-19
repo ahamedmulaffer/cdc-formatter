@@ -15,7 +15,7 @@ func (after AfterType) loopRequiredFields(tableName string, operation string, re
 			continue
 		}
 		//check if map to id enbled
-		if sliceField(requiredFields).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) {
+		if sliceField(requiredFields).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) && reqField == "ID"{
 			idToHPIDFuncCalled = true
 			if _, ok := payloadAfter["ID"]; ok {
 				finalPayload["HPID"] = payloadAfter["ID"]
@@ -72,7 +72,7 @@ func (after AfterType) loopPayloadFields(tableName string, operation string, pay
 		if idToHPIDFuncCalled && field == "HPID" {
 			continue
 		}
-		if mapField(payloadAfter).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled){
+		if mapField(payloadAfter).isMapIDToHPIDEnabled(tableName, operation, idToHPIDFuncCalled) && field == "ID"{
 			idToHPIDFuncCalled = true
 			if _, ok := payloadAfter["ID"]; ok {
 				finalPayload["HPID"] = payloadAfter["ID"]
