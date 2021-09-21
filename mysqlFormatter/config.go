@@ -18,6 +18,7 @@ var allIDToHPIDTableOperations = make(map[string]map[string]bool)
 var allValToStrOperations = make(map[string]map[string]bool)
 var afterAllTableOperations = make(map[string]map[string]bool)
 var beforeAllTableOperations = make(map[string]map[string]bool)
+var allCreatedByOrUpdatedByTableOperations = make(map[string]map[string]string)
 
 var allowedKeys = map[string]bool{
 	"insert": true,
@@ -33,6 +34,7 @@ var allowedKeys = map[string]bool{
 	"all_value_to_string": true,
 	"null_to": true,
 	"map_id_to_hpid": true,
+	"create_update_by":true,
 }
 
 var stringBooleanKeys = map[string]string {
@@ -70,6 +72,7 @@ var strValuedKeys = map[string]bool {
 	"all_value_to_string": true,
 	"null_to": true,
 	"map_id_to_hpid": true,
+	"create_update_by": true,
 }
 var objectKeys = map[string]bool {
 	"time_formatter": true,
@@ -141,6 +144,7 @@ func validateConfig() error{
 	// fmt.Println("allNullToTableOperations", allNullToTableOperations)
 	// fmt.Println("allIDToHPIDTableOperations", allIDToHPIDTableOperations)
 	// fmt.Println("allValToStrOperations", allValToStrOperations)
+	// fmt.Println("allCreatedByOrUpdatedByTableOperations", allCreatedByOrUpdatedByTableOperations)
 	return nil
 }
 
@@ -214,6 +218,7 @@ func onlyStringValuesAllowed(table string, operation string, key string, v inter
 		return err
 	}
 	ifNullToAvailable(table, operation, key, val)
+	ifCreatedUpdatedByAvailable(table, operation, key, val)
 	return nil
 }
 
@@ -297,6 +302,16 @@ func ifNullToAvailable(table string, operation string, key string, v string) {
 		allNullToTableOperations[table] = make(map[string]string)
 	}
 	allNullToTableOperations[table][operation] = v
+}
+
+func ifCreatedUpdatedByAvailable(table string, operation string, key string, v string) {
+	if key != "create_update_by" {
+		return
+	}
+	if _,ok := allCreatedByOrUpdatedByTableOperations[table]; !ok {
+		allCreatedByOrUpdatedByTableOperations[table] = make(map[string]string)
+	}
+	allCreatedByOrUpdatedByTableOperations[table][operation] = v
 }
 
 func setBoolTableOperation(table string, operation string, key string) {

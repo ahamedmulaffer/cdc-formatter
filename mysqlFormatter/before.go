@@ -1,6 +1,11 @@
 package mysqlFormatter
 
+import(
+	// "fmt"
+)
+
 type BeforeType string
+
 
 
 func (before BeforeType) loopRequiredFields(tableName string, operation string, requiredB4Fields []string, payloadBefore map[string]interface{}, finalPayload map[string]interface{}){
@@ -86,6 +91,9 @@ func (before BeforeType) loopPayloadFields(tableName string, operation string, p
 			hostId := assertToString(payloadBefore["HostID"])
 			before.underscoreWithHostidFields(tableName,operation,field,finalPayload,hostId)
 			before.underscoreWithHostidAssetFields(tableName,operation,field,finalPayload,hostId)
+		}
+		if val, ok := isCreateOrUpdateByAvailable(tableName, operation, field); ok {
+			finalPayload[field] = val
 		}
 		before.timeFieldConversion(tableName,operation,field,finalPayload)
 		before.strConversion(tableName,operation,field,finalPayload)

@@ -37,6 +37,9 @@ func (after AfterType) loopRequiredFields(tableName string, operation string, re
 			after.underscoreWithHostidFields(tableName,operation,reqField,finalPayload,hostId)
 			after.underscoreWithHostidAssetFields(tableName,operation,reqField,finalPayload,hostId)
 		}
+		if val, ok := isCreateOrUpdateByAvailable(tableName, operation, reqField); ok {
+			finalPayload[reqField] = val
+		}
 		after.timeFieldConversion(tableName,operation,reqField,finalPayload)
 		after.strConversion(tableName,operation,reqField,finalPayload)
 		//field type conversion
@@ -93,6 +96,9 @@ func (after AfterType) loopPayloadFields(tableName string, operation string, pay
 			hostId := assertToString(payloadAfter["HostID"])
 			after.underscoreWithHostidFields(tableName,operation,field,finalPayload,hostId)
 			after.underscoreWithHostidAssetFields(tableName,operation,field,finalPayload,hostId)
+		}
+		if val, ok := isCreateOrUpdateByAvailable(tableName, operation, field); ok {
+			finalPayload[field] = val
 		}
 		after.timeFieldConversion(tableName,operation,field,finalPayload)
 		after.strConversion(tableName,operation,field,finalPayload)
