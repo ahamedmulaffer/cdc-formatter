@@ -64,14 +64,15 @@ func addUnderscoreToArrayFields(finalPayload map[string]interface{}, field strin
 		if len(sliceAssets) == 0 {
 			return
 		}
-		for k,asset := range sliceAssets {
+		var sliceAssetsStr []string
+		for _,asset := range sliceAssets {
 			fileName, ok := canBeAssertToString(asset)
 			if !ok {
 				continue
 			}
-			sliceAssets[k] = fileName+"_"+HostID
+			sliceAssetsStr = append(sliceAssetsStr, fileName+"_"+HostID)
 		}
-		finalPayload[field] = sliceAssets
+		finalPayload[field] = strings.Join(sliceAssetsStr,",")
 		return
 	}
 	if val, ok := canBeAssertToString(finalPayload[field]); ok {
