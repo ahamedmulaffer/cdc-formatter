@@ -75,7 +75,11 @@ func addUnderscoreToArrayFields(finalPayload map[string]interface{}, field strin
 		return
 	}
 	if val, ok := canBeAssertToString(finalPayload[field]); ok {
-		finalPayload[field] = strings.Split(val, ",")
+		var ids []string
+		for _,v := range strings.Split(val, ",") {
+			ids = append(ids, v+"_"+HostID)
+		}
+		finalPayload[field] = ids
 		return
 	}
 
