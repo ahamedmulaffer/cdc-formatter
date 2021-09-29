@@ -79,7 +79,7 @@ func addUnderscoreToArrayFields(finalPayload map[string]interface{}, field strin
 		for _,v := range strings.Split(val, ",") {
 			ids = append(ids, v+"_"+HostID)
 		}
-		finalPayload[field] = ids
+		finalPayload[field] = strings.Join(ids,",")
 		return
 	}
 
