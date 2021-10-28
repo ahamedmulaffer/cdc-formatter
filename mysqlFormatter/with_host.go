@@ -2,7 +2,7 @@ package mysqlFormatter
 
 import(
 	"encoding/json"
-	"strings"
+	// "strings"
 )
 
 
@@ -76,7 +76,7 @@ func addUnderscoreToAssetFields(finalPayload map[string]interface{}, field strin
 				return
 			}
 			for k,asset := range sliceAssets {
-				if strings.TrimSpace(asset) == "" {
+				if asset == "" {
 					continue
 				}
 				sliceAssets[k] = HostID+"_"+asset

@@ -1,14 +1,14 @@
 package mysqlFormatter
 
 import(
-	"strings"
+	// "strings"
 	"fmt"
 )
 
 func canBeAssertToString(val interface{}) (string, bool) {
 	value, ok := val.(string)
 	if ok {
-		return strings.TrimSpace(value) ,ok
+		return value ,ok
 	}
 	return "", ok
 }
