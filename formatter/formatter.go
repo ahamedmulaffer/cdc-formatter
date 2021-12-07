@@ -16,21 +16,21 @@ var funcMapper = map[string]interface{}{
 
 func Process(message string) (interface{}, error) {
 	currentMessageMap := make(map[string]interface{})
-	currentMessagePayloadMap := make(map[string]interface{})
+	// currentMessagePayloadMap := make(map[string]interface{})
 	currentMessageSourceMap := make(map[string]interface{})
 	if err := messageUnMarshaller(message, currentMessageMap); err != nil {
 		return nil, err
 	}
-	payloadStr, _ := json.Marshal(currentMessageMap["payload"])
-	if err := messageUnMarshaller(string(payloadStr), currentMessagePayloadMap); err != nil {
-		return nil, err
-	}
-	sourceStr, _ := json.Marshal(currentMessagePayloadMap["source"])
+	// payloadStr, _ := json.Marshal(currentMessageMap["payload"])
+	// if err := messageUnMarshaller(string(payloadStr), currentMessagePayloadMap); err != nil {
+	// 	return nil, err
+	// }
+	sourceStr, _ := json.Marshal(currentMessageMap["source"])
 	if err := messageUnMarshaller(string(sourceStr), currentMessageSourceMap); err != nil {
 		return nil, err
 	}
 	connectorStr := currentMessageSourceMap["connector"].(string)
-	res, err := call(connectorStr, currentMessagePayloadMap, currentMessageSourceMap)
+	res, err := call(connectorStr, currentMessageMap, currentMessageSourceMap)
 	if err != nil {
 		return nil, err
 	}
