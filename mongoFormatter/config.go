@@ -179,12 +179,12 @@ func isValidKey(operation string, key string) error {
 	if key == "required_before_fields" && operation == "insert" {
 		return errors.New("key " + key + " is not allowed for operation " + operation)
 	}
-	if key == "required_after_all" && operation != "insert" {
+	if key == "required_after_all" && operation == "delete" {
 		return errors.New("key " + key + " is not allowed for operation " + operation)
 	}
-	// if key == "required_after_fields" && operation != "insert" {
-	// 	return errors.New("key "+key+ " is not allowed for operation "+operation)
-	// }
+	if key == "required_after_fields" && operation == "delete" {
+		return errors.New("key " + key + " is not allowed for operation " + operation)
+	}
 	return nil
 }
 
