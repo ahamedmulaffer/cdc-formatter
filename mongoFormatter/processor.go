@@ -46,6 +46,27 @@ func Process(payload map[string]interface{}, source map[string]interface{}) map[
 	finalPayload["source"]["allowed"] = true
 	requiredAfterFields, requiredAfterFieldsAvailable := afterType.isRequiredFieldsAvailable(collectionName, operation)
 	requiredB4Fields, requiredB4FieldsAvailable := beforeType.isRequiredFieldsAvailable(collectionName, operation)
+
+	if payload["after"] == nil && payload["updateDescription"] != nil {
+		updateDescription, ok := payload["updateDescription"].(map[string]interface{})
+		if !ok || updateDescription == nil {
+			return finalPayload
+		}
+		updatedFields, ok := updateDescription["updatedFields"]
+		if !ok || updatedFields == nil {
+			return finalPayload
+		}
+		payloadAfter := make(map[string]interface{})
+		if err := json.Unmarshal([]byte(updatedFields.(string)), &payloadAfter); err != nil {
+			return finalPayload
+		}
+		if requiredAfterFieldsAvailable {
+			afterType.loopRequiredFields(collectionName, operation, requiredAfterFields, payloadAfter, finalPayload["after"])
+		}
+		if _, ok := afterAllCollectionOperations[collectionName][operation]; ok {
+			afterType.loopPayloadFields(collectionName, operation, payloadAfter, finalPayload["after"])
+		}
+	}
 	if payload["after"] != nil {
 		payloadAfter := make(map[string]interface{})
 		if err := json.Unmarshal([]byte(payload["after"].(string)), &payloadAfter); err != nil {
